@@ -6,8 +6,6 @@ namespace Sorted.Domain;
 
 public class Quote
 {
-
-
     private string _ownerName { get; }
     private string _title { get; }
 
@@ -22,6 +20,14 @@ public class Quote
         _ownerName = ownerName;
         _title = title;
         _creation = DateTime.UtcNow;
+    }
+
+    public Quote(string ownerName, string title, decimal askedPrice)
+    {
+        _ownerName = ownerName;
+        _title = title;
+        _creation = DateTime.UtcNow;
+        _askedPrice = askedPrice;
     }
 
     public string getOwnerName()
