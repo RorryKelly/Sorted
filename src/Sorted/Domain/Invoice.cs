@@ -3,6 +3,7 @@ namespace Sorted.Domain;
 
 public class Invoice
 {
+    private string _parentId;
     private string _invoiceTitle;
     private decimal _invoiceAmount;
     private bool _isPaid;
