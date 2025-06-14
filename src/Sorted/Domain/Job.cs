@@ -3,106 +3,67 @@ using Sorted.Domain.ValueObject;
 
 namespace Sorted.Domain;
 
-public class Job
+public class Job : IDomainAccess
 {
-    private string _title;
-    private string _ownerName;
-    private DateTime _startDate;
-    private DateTime _endDate;
-    private DateTime _creation;
-    private List<Invoice> _invoices;
-    private List<Expense> _expenses;
-    private decimal _agreedPrice;
+    public string Title;
+    public string OwnerId;
+    public DateTime StartDate;
+    public DateTime EndDate;
+    public DateTime Creation;
+    public decimal AgreedPrice;
+}
 
-    public Job(string title, decimal agreedPrice, string owner, DateTime creationDate, DateTime startDate)
+public class JobBuilder
+{
+    private Job _job;
+
+    public JobBuilder()
     {
-        _title = title;
-        _agreedPrice = agreedPrice;
-        _ownerName = owner;
-        _creation = creationDate;
-        _startDate = startDate;
-        _invoices = new List<Invoice>();
-        _expenses = new List<Expense>();
+        _job = new Job();
     }
 
-    public Job(string title, string ownerName, DateTime startDate, DateTime endDate, DateTime creation, List<Expense> expenses, decimal agreedPrice)
+    public JobBuilder Title(string title)
     {
-        _title = title;
-        _ownerName = ownerName;
-        _startDate = startDate;
-        _endDate = endDate;
-        _creation = creation;
-        _expenses = expenses;
-        _agreedPrice = agreedPrice;
-        _invoices = new List<Invoice>();
+        _job.Title = title;
+        return this;
     }
 
-    public void createInvoice(Invoice newInvoice)
+    public JobBuilder OwnerId(string ownerId)
     {
-        if (_invoices == null)
+        _job.OwnerId = ownerId;
+        return this;
+    }
+
+    public JobBuilder StartDate(DateTime startDate)
+    {
+        _job.StartDate = startDate;
+        return this;
+    }
+
+    public JobBuilder EndDate(DateTime endDate)
+    {
+        _job.EndDate = endDate;
+        return this;
+    }
+
+    public JobBuilder Creation(DateTime creation)
+    {
+        _job.Creation = creation;
+        return this;
+    }
+
+    public JobBuilder AgreedPrice(decimal agreedPrice)
+    {
+        _job.AgreedPrice = agreedPrice;
+        return this;
+    }
+
+    public Job Build()
+    {
+        if (_job.Creation == DateTime.MinValue)
         {
-            _invoices = new List<Invoice>();
+            _job.Creation = DateTime.UtcNow;
         }
-
-        _invoices.Add(newInvoice);
-    }
-
-    public void createExpense(Expense newExpense)
-    {
-        if (_expenses == null)
-        {
-            _expenses = new List<Expense>();
-        }
-
-        _expenses.Add(newExpense);
-    }
-
-    public decimal getAgreedPrice()
-    {
-        return _agreedPrice;
-    }
-
-    public DateTime getCreationDate()
-    {
-        return _creation;
-    }
-
-    public string getOwner()
-    {
-        return _ownerName;
-    }
-
-    public DateTime getStartDate()
-    {
-        return _startDate;
-    }
-
-    public string getTitle()
-    {
-        return _title;
-    }
-
-    public List<Expense> getExpenses()
-    {
-        return _expenses;
-    }
-
-    public List<Invoice> getInvoices()
-    {
-        return _invoices;
-    }
-
-    public decimal getAmountPaid()
-    {
-        decimal amountPaid = 0;
-        foreach (var invoice in _invoices)
-        {
-            if (invoice.hasPaid())
-            {
-                amountPaid += invoice.getAmount();
-            }
-        }
-
-        return amountPaid;
+        return _job;
     }
 }

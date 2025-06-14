@@ -1,0 +1,1 @@
+public record GetInvoiceQuery(string invoiceId, string jobId, string ownerId, string name) : IQuery<List<GetInvoiceResponse>>;
