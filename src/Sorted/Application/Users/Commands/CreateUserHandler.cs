@@ -8,12 +8,10 @@ namespace Sorted.Application.Commands;
 
 public class CreateUserHandler : IRequestHandler<CreateUserCommand, string>
 {
-    private ICreateRepository<User, string> _repository;
     private IIdentityService _identityService;
 
-    public CreateUserHandler(ICreateRepository<User, string> repository, IIdentityService identityService)
+    public CreateUserHandler(IIdentityService identityService)
     {
-        _repository = repository;
         _identityService = identityService;
     }
 
