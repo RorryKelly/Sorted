@@ -19,4 +19,9 @@ public class Result<T>
         successful.Errors = errors;
         return successful;
     }
+
+    public string ErrorsToString()
+    {
+        return String.Join(", ", Errors.ToArray());
+    }
 }

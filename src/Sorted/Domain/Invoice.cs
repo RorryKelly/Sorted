@@ -3,6 +3,7 @@ namespace Sorted.Domain;
 
 public class Invoice : IDomainAccess
 {
+    public string Id { get; set; }
     public string Title { get; set; }
     public decimal Amount { get; set; }
     public bool IsPaid { get; set; }

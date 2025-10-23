@@ -1,10 +1,15 @@
+using System.Text;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Sorted.Application.Commands;
 using Sorted.Application.Common;
 using Sorted.Application.Query;
 using Sorted.Domain;
 using Sorted.Domain.ValueObject;
+using Sorted.Infra.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,14 +17,36 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<SqlDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<IdentitySqlDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddDbContext<ApplicationSqlDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<SqlDbContext>();
+builder.Services.AddIdentity<User, UserRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<IdentitySqlDbContext>();
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.AddAuthentication(optiones =>
+{
+    optiones.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    optiones.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    optiones.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+    };
+});
 builder.Services.AddScoped<IIdentityService, IdentityService>();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
 //users
@@ -58,6 +85,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

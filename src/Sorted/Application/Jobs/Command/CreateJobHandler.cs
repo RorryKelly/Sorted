@@ -18,11 +18,11 @@ public class CreateJobHandler : IRequestHandler<CreateJobCommand, string>
 
     public async Task<string> Handle(CreateJobCommand request, CancellationToken cancellationToken)
     {
-        Result<string> userIdResult = _identityService.GetUserId();
+        Result<string> userIdResult = await _identityService.GetUserId();
 
         if (!userIdResult.IsSuccess)
         {
-            throw new Exception();
+            throw new Exception(userIdResult.ErrorsToString());
         }
 
         JobBuilder jobBuilder = new JobBuilder();

@@ -33,6 +33,7 @@ public class GetQuoteQueryTests
             .Title(title)
             .AskedPrice(agreedPrice)
             .OwnerId(ownerId)
+            .StartDate(creation.AddDays(1))
             .Creation(creation)
             .JobId(jobId)
             .Build();

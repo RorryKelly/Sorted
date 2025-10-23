@@ -19,7 +19,7 @@ public class CreateExpenseHandler : IRequestHandler<CreateExpenseCommand, string
 
     public async Task<string> Handle(CreateExpenseCommand request, CancellationToken cancellationToken)
     {
-        Result<string> userIdResult = _identityService.GetUserId();
+        Result<string> userIdResult = await _identityService.GetUserId();
 
         if (!userIdResult.IsSuccess)
         {

@@ -18,7 +18,7 @@ public class CreateQuoteHandler : IRequestHandler<CreateQuoteCommand, string>
 
     public async Task<string> Handle(CreateQuoteCommand request, CancellationToken cancellationToken)
     {
-        Result<string> userIdResult = _identityService.GetUserId();
+        Result<string> userIdResult = await _identityService.GetUserId();
 
         if (!userIdResult.IsSuccess)
         {

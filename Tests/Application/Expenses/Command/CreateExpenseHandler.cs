@@ -30,7 +30,7 @@ public class ExpenseTests
         int quantity = 1;
         string userId = "userId";
         repository.Setup(r => r.Create(It.IsAny<Expense>(), CancellationToken.None)).ReturnsAsync(Result<string>.Success("Success"));
-        identityService.Setup(id => id.GetUserId()).Returns(Result<string>.Success(userId));
+        identityService.Setup(id => id.GetUserId()).ReturnsAsync(Result<string>.Success(userId));
         CreateExpenseCommand createExpenseHandlerCommand = new CreateExpenseCommand(title, ownerId, creation, jobId, cost, quantity);
 
         await createExpenseHandler.Handle(createExpenseHandlerCommand, CancellationToken.None);

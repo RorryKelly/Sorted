@@ -5,12 +5,13 @@ namespace Sorted.Domain;
 
 public class Job : IDomainAccess
 {
-    public string Title;
-    public string OwnerId;
-    public DateTime StartDate;
-    public DateTime EndDate;
-    public DateTime Creation;
-    public decimal AgreedPrice;
+    public string Id { get; set; }
+    public string Title { get; set; }
+    public string OwnerId { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public DateTime Creation { get; set; }
+    public decimal AgreedPrice { get; set; }
 }
 
 public class JobBuilder
@@ -20,6 +21,12 @@ public class JobBuilder
     public JobBuilder()
     {
         _job = new Job();
+    }
+
+    public JobBuilder Id(string id)
+    {
+        _job.Id = id;
+        return this;
     }
 
     public JobBuilder Title(string title)

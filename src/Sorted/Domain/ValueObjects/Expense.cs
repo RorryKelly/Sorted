@@ -3,6 +3,7 @@ namespace Sorted.Domain.ValueObject;
 
 public class Expense : IDomainAccess
 {
+    public string Id { get; set; }
     public string Title { get; set; }
     public string OwnerId { get; set; }
     public string JobId { get; set; }

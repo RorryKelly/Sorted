@@ -6,6 +6,7 @@ namespace Sorted.Domain;
 
 public class Quote : IDomainAccess
 {
+    public string Id { get; set; }
     public string OwnerId { get; set; }
     public string Title { get; set; }
     public DateTime Creation { get; set; }

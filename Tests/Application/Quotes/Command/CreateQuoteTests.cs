@@ -29,7 +29,7 @@ public class QuoteTests
         decimal agreedPrice = 3.0m;
         string userId = "userId";
         repository.Setup(r => r.Create(It.IsAny<Quote>(), CancellationToken.None)).ReturnsAsync(Result<string>.Success("Success"));
-        identityService.Setup(id => id.GetUserId()).Returns(Result<string>.Success(userId));
+        identityService.Setup(id => id.GetUserId()).ReturnsAsync(Result<string>.Success(userId));
         CreateQuoteCommand createQuoteHandlerCommand = new CreateQuoteCommand(title, ownerId, creation, jobId, agreedPrice);
 
         await createQuoteHandler.Handle(createQuoteHandlerCommand, CancellationToken.None);

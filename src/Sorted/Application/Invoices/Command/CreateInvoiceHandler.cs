@@ -18,10 +18,12 @@ public class CreateInvoiceHandler : IRequestHandler<CreateInvoiceCommand, string
 
     public async Task<string> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
     {
+        Result<string> userIdResult = await _identityService.GetUserId();
+
         InvoiceBuilder invoiceBuilder = new InvoiceBuilder();
         Invoice newInvoice = invoiceBuilder
             .Title(request.title)
-            .OwnerId(request.ownerId)
+            .OwnerId(userIdResult.Value)
             .Amount(request.amount)
             .Creation(request.creation)
             .JobId(request.jobId)

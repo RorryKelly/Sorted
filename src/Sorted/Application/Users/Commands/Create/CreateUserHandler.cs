@@ -1,7 +1,6 @@
 
 
 using MediatR;
-using Microsoft.Identity.Client;
 using Sorted.Domain;
 
 namespace Sorted.Application.Commands;
