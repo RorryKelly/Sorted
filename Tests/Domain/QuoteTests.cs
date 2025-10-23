@@ -11,70 +11,24 @@ public class QuoteTests
     }
 
     [Test]
-    public void QuotesShouldBelongToSomeoneAndHaveATitle()
+    public void QuotesShouldBeBuildable()
     {
-        string ownerName = "testUser";
-        string title = "New Boiler Quote";
+        string title = "test title";
+        decimal agreedPrice = 30.00m;
+        string owner = "testUser";
+        DateTime creationDate = DateTime.UtcNow.AddDays(1);
 
-        Quote quote = new Quote(ownerName, title);
+        QuoteBuilder QuoteBuilder = new QuoteBuilder();
+        Quote newQuote = QuoteBuilder
+            .Title(title)
+            .AskedPrice(agreedPrice)
+            .OwnerId(owner)
+            .Creation(creationDate)
+            .Build();
 
-        Assert.That(quote.getOwnerName(), Is.EqualTo(ownerName));
-        Assert.That(quote.getTitle(), Is.EqualTo(title));
-    }
-
-    [Test]
-    public void QuotesShouldKeepTrackOfCreationDate()
-    {
-        string ownerName = "testUser";
-        string title = "New Boiler Quote";
-
-        Quote quote = new Quote(ownerName, title);
-
-        Assert.That(DateTime.UtcNow.CompareTo(quote.getCreation()), Is.AtLeast(0));
-    }
-
-    [Test]
-    public void QuotesShouldHaveAListOfExpenses()
-    {
-        string ownerName = "testUser";
-        string title = "New Boiler Quote";
-        Expense exampleExpense = new Expense("new expense", 0, 0);
-
-        Quote quote = new Quote(ownerName, title);
-        quote.AddExpense(exampleExpense);
-
-        Assert.That(quote.getExpenses().Count(), Is.EqualTo(1));
-    }
-
-    [Test]
-    public void QuotesShouldGiveEstimationsAndSaveThatInformation()
-    {
-        string ownerName = "testUser";
-        string title = "New Boiler Quote";
-        decimal expenseCost = 30.00m;
-        int expenseQuantity = 6;
-        Expense expense = new Expense("new expense", expenseCost, expenseQuantity);
-
-
-        Quote quote = new Quote(ownerName, title);
-        quote.AddExpense(expense);
-        quote.EstimateCosts();
-
-        Assert.That(quote.getQuotePrice(), Is.EqualTo(expenseCost * expenseQuantity));
-    }
-
-    [Test]
-    public void QuotesShouldReturnJobsWhenAccepted()
-    {
-        string ownerName = "testUser";
-        string title = "New Boiler Quote";
-        DateTime startDate = DateTime.UtcNow.AddDays(5);
-        DateTime endDate = DateTime.UtcNow.AddDays(5);
-        decimal agreedPrice = 500.00m;
-
-        Quote quote = new Quote(ownerName, title);
-        Job result = quote.Accept(startDate, endDate, agreedPrice);
-
-        Assert.That(result, Is.Not.Null);
+        Assert.That(newQuote.Title, Is.EqualTo(title));
+        Assert.That(newQuote.AskedPrice, Is.EqualTo(agreedPrice));
+        Assert.That(newQuote.OwnerId, Is.EqualTo(owner));
+        Assert.That(newQuote.Creation, Is.EqualTo(creationDate));
     }
 }

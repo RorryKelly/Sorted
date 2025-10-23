@@ -4,73 +4,67 @@ using Sorted.Domain.ValueObject;
 
 namespace Sorted.Domain;
 
-public class Quote
+public class Quote : IDomainAccess
 {
+    public string Id { get; set; }
+    public string OwnerId { get; set; }
+    public string Title { get; set; }
+    public DateTime Creation { get; set; }
+    public string JobId { get; set; }
+    public decimal AskedPrice { get; set; }
+}
 
+public class QuoteBuilder
+{
+    private Quote _quote;
 
-    private string _ownerName { get; }
-    private string _title { get; }
-
-    private DateTime _creation;
-
-    private List<Expense> _expenses;
-
-    private decimal _askedPrice;
-
-    public Quote(string ownerName, string title)
+    public QuoteBuilder()
     {
-        _ownerName = ownerName;
-        _title = title;
-        _creation = DateTime.UtcNow;
+        _quote = new Quote();
     }
 
-    public string getOwnerName()
+    public QuoteBuilder Title(string title)
     {
-        return _ownerName;
+        _quote.Title = title;
+        return this;
     }
 
-    public string getTitle()
+    public QuoteBuilder OwnerId(string ownerId)
     {
-        return _title;
+        _quote.OwnerId = ownerId;
+        return this;
     }
 
-    public DateTime getCreation()
+    public QuoteBuilder StartDate(DateTime creation)
     {
-        return _creation;
+        _quote.Creation = creation;
+        return this;
     }
 
-    public void AddExpense(Expense exampleExpense)
+    public QuoteBuilder JobId(string jobId)
     {
-        if (_expenses == null)
+        _quote.JobId = jobId;
+        return this;
+    }
+
+    public QuoteBuilder Creation(DateTime creation)
+    {
+        _quote.Creation = creation;
+        return this;
+    }
+
+    public QuoteBuilder AskedPrice(decimal askedPrice)
+    {
+        _quote.AskedPrice = askedPrice;
+        return this;
+    }
+
+    public Quote Build()
+    {
+        if (_quote.Creation == DateTime.MinValue)
         {
-            _expenses = new List<Expense>();
+            _quote.Creation = DateTime.UtcNow;
         }
-        _expenses.Add(exampleExpense);
-    }
-
-    public List<Expense> getExpenses()
-    {
-        return _expenses;
-    }
-
-    public decimal getQuotePrice()
-    {
-        return _askedPrice;
-    }
-
-    public void EstimateCosts()
-    {
-        decimal estimatedCost = 0.00m;
-        foreach (var expense in _expenses)
-        {
-            estimatedCost += expense.ExpenseCost * expense.ExpenseQuantity;
-        }
-
-        _askedPrice = estimatedCost;
-    }
-
-    public Job Accept(DateTime startDate, DateTime endDate, decimal agreedPrice)
-    {
-        return new Job(_title, _ownerName, startDate, endDate, _creation, _expenses, agreedPrice);
+        return _quote;
     }
 }

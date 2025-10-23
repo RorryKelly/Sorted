@@ -1,0 +1,1 @@
+public record GetExpenseQuery(string title, string ownerId, DateTime creation, string jobId, decimal cost, int quantity) : IQuery<List<GetExpenseResponse>>;
